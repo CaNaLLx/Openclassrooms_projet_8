@@ -1,0 +1,16 @@
+# ===== Dossiers (trop volumineux)
+Data/
+Models/
+
+# ===== Dossiers compressés (inutiles)
+*.zip
+*.tar.gz
+
+# ===== Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+*.ipynb
+
+# ===== Fichiers parasites
+.DS_Store
+
