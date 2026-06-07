@@ -1,0 +1,34 @@
+Images : caméra embarqué
+
+Images réelles + masques
+
+Identifier des parties d'images : classifier
+
+Utilisation de GitHub :
+Branche main (modèle validé - daté)
+Branches pour tout changement (une branche par type
+Pull Request (détails et explications sur les changements)
+ReadMe explicatif (branches, dossiers, …)
+
+API : déployer modèle sur cloud (utiliser les webapps/webservices d'azure)
+
+INTERFACE : Image réelle + masque prédit + masque corrigé
+
+Modèles : SIFT / ORB + VGG... + LSTM (ou d'autres modèles)
+
+Ordre :
+
+1 - Modèles (choisir un modèle)
+	Créer base 
+
+train
+val 
+test
+
+2 - API ( exporter modèle sur le cloud )
+3 - Interface : sélection d'images + (ajout d'image par l'utilisateur, puis application du modèle, si masque réel (images sélectionné pas image ajoutée)), alors comparaison entre réel et prédiction, sinon 
+
+Feuille technique : présentation des modèles théoriques (type, intérêt, ...), process, architecture
+
+
+choix metric, pref model, DICE coef, IOU, balance cross entropy, total loss
