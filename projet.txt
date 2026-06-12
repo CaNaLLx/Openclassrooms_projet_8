@@ -32,3 +32,16 @@ Feuille technique : présentation des modèles théoriques (type, intérêt, ...
 
 
 choix metric, pref model, DICE coef, IOU, balance cross entropy, total loss
+
+| Métrique 		| Quand l'utiliser 		| Pourquoi 					|
+
+|----------		|-----------------		|----------					|
+
+| **Cross Entropy** 	| Baseline / loss simple 	| Standard, facile à interpréter 		|
+
+| **Dice Loss** 	| Classes déséquilibrées 	| Gère mieux les petites classes (ex: `human`) 	|
+
+| **CCE + Dice** 	| Recommandé ✅ 		| Combine stabilité + gestion du déséquilibre 	|
+
+| **mean IoU** 		| Métrique finale 		| Standard en segmentation (comparaison modèles)|
+
