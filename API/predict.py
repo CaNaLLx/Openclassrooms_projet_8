@@ -5,7 +5,7 @@ import io
 
 # ✅ Charger le modèle TFLite light
 interpreter = tf.lite.Interpreter(
-    model_path="Models/vgg16_unet_light.tflite"
+    model_path="vgg16_unet_quantized.tflite"
 )
 interpreter.allocate_tensors()
 
