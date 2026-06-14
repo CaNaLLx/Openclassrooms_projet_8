@@ -1,6 +1,6 @@
 # ===== Dossiers (trop volumineux)
 Data/
-Models/
+
 
 # ===== Dossiers compressés (inutiles)
 *.zip
@@ -13,3 +13,5 @@ Models/
 
 # ===== Fichiers parasites
 .DS_Store
+
+.keras
