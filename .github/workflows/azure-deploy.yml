@@ -2,13 +2,7 @@ name: Deploy API to Azure
 
 on:
   push:
-    branches: [main]
-  workflow_dispatch:
-
-env:
-  AZURE_WEBAPP_NAME: api-segmentation-voiture
-  PYTHON_VERSION: '3.10'
-  WORKING_DIR: './API'
+    branches: [ main ]
 
 jobs:
   build-and-deploy:
@@ -19,19 +13,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: '3.10'
 
       - name: Install dependencies
-        run: |
-          cd ${{ env.WORKING_DIR }}
-          python -m venv antenv
-          source antenv/bin/activate
-          pip install --upgrade pip
-          pip install -r requirements.txt
+        working-directory: ./API
+        run: pip install -r requirements.txt
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          app-name: 'api-segmentation-voiture'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ${{ env.WORKING_DIR }}
+          package: ./API
