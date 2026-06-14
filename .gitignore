@@ -12,6 +12,6 @@ Data/
 *.ipynb
 
 # ===== Fichiers parasites
-.DS_Store
+*.DS_Store
 
-.keras
+*.keras
