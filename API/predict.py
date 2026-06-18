@@ -1,68 +1,48 @@
-import numpy as np
 import tensorflow as tf
+import numpy as np
 from PIL import Image
 import io
+import os
 
-# ✅ Charger le modèle TFLite light
-interpreter = tf.lite.Interpreter(
-    model_path="vgg16_unet_quantized.tflite"
-)
+# Chemin du modèle
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "Models", "vgg16_unet_quantized.tflite")
+
+# Charge le modèle une fois
+interpreter = tf.lite.Interpreter(model_path=MODEL_PATH)
 interpreter.allocate_tensors()
-
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
-IMG_SIZE = (256, 512)
+# Couleurs des 8 classes
+PALETTE = np.array([
+    [128, 64, 128], [244, 35, 232], [70, 70, 70], [102, 102, 156],
+    [153, 153, 153], [107, 142, 35], [70, 130, 180], [220, 20, 60]
+], dtype=np.uint8)
 
-COLORS = [
-    [128, 64, 128],   # flat
-    [220, 20, 60],    # human
-    [0, 0, 142],      # vehicle
-    [70, 70, 70],     # construction
-    [153, 153, 153],  # object
-    [107, 142, 35],   # nature
-    [70, 130, 180],   # sky
-    [0, 0, 0],        # void
-]
 
-def predict_mask(image_bytes: bytes) -> dict:
-    """
-    Prédire avec le modèle TFLite light (rapide & léger).
-    """
-    try:
-        # 1️⃣ Charger et redimensionner
-        img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
-        img = img.resize((IMG_SIZE[1], IMG_SIZE[0]))
-        arr = np.array(img, dtype=np.float32) / 255.0
-        arr = np.expand_dims(arr, axis=0)
+def predict_mask(image_bytes):
+    # Charge l'image
+    img = Image.open(io.BytesIO(image_bytes)).convert('RGB')
+    original_size = img.size
 
-        # 2️⃣ Prédiction avec TFLite
-        interpreter.set_tensor(input_details[0]['index'], arr)
-        interpreter.invoke()
-        pred = interpreter.get_tensor(output_details[0]['index'])
-        
-        pred_classes = np.argmax(pred[0], axis=-1)
+    # Taille attendue par le modèle
+    _, h, w, _ = input_details[0]['shape']
 
-        # 3️⃣ Coloriser
-        h, w = pred_classes.shape
-        color_mask = np.zeros((h, w, 3), dtype=np.uint8)
-        for class_id, color in enumerate(COLORS):
-            color_mask[pred_classes == class_id] = color
+    # Prépare l'image
+    img_array = np.array(img.resize((w, h)), dtype=np.float32) / 255.0
+    img_batch = np.expand_dims(img_array, axis=0)
 
-        # 4️⃣ Retourner en bytes PNG
-        out_img = Image.fromarray(color_mask)
-        buf = io.BytesIO()
-        out_img.save(buf, format="PNG")
-        buf.seek(0)
-        
-        return {
-            "mask_bytes": buf.read(),
-            "success": True,
-            "classes": pred_classes.tolist()
-        }
-    
-    except Exception as e:
-        return {
-            "error": str(e),
-            "success": False
-        }
+    # Prédiction
+    interpreter.set_tensor(input_details[0]['index'], img_batch)
+    interpreter.invoke()
+    output = interpreter.get_tensor(output_details[0]['index'])
+
+    # Mask colorisé
+    mask = np.argmax(output[0], axis=-1).astype(np.uint8)
+    mask_color = PALETTE[mask]
+
+    # Retourne en PNG
+    mask_img = Image.fromarray(mask_color).resize(original_size, Image.NEAREST)
+    buffer = io.BytesIO()
+    mask_img.save(buffer, format="PNG")
+    return buffer.getvalue()
