@@ -3,13 +3,14 @@ import requests
 from pathlib import Path
 from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt 
 import io
+import os
 
 # Config
-API_URL = "http://localhost:8000/predict"
-IMG_DIR = Path("../Data/Images/val/input")
-MASK_DIR = Path("../Data/Images/val/mask")
+API_URL = os.environ.get("API_URL", "http://localhost:8000") + "/predict"
+IMG_DIR = Path("../Data/Images/sample/input")
+MASK_DIR = Path("../Data/Images/sample/mask")
 
 st.title("🚗 Segmentation d'images - Véhicule autonome")
 

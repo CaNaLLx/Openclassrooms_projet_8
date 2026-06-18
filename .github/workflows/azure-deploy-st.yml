@@ -1,0 +1,33 @@
+name: Deploy Streamlit to Azure
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Interface/**'
+      - '.github/workflows/deploy-streamlit.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installer les dépendances
+        run: |
+          cd Interface
+          pip install -r requirements.txt
+
+      - name: Déployer sur Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'app-streamlit-segmentation'
+          publish-profile: ${{ secrets.AZURE_STREAMLIT_PUBLISH_PROFILE }}
+          package: 'Interface'
