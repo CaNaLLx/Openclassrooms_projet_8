@@ -1,7 +1,5 @@
 # ===== Dossiers (trop volumineux)
-Data/Images/test/
-Data/Images/val/
-Data/Images/train/
+Data/
 
 
 # ===== Dossiers compressés (inutiles)

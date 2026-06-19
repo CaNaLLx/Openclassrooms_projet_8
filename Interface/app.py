@@ -9,8 +9,8 @@ import os
 
 # Config
 API_URL = os.environ.get("API_URL", "http://localhost:8000") + "/predict"
-IMG_DIR = Path("../Data/Images/sample/input")
-MASK_DIR = Path("../Data/Images/sample/mask")
+IMG_DIR = Path("sample/input")
+MASK_DIR = Path("sample/mask")
 
 st.title("🚗 Segmentation d'images - Véhicule autonome")
 
